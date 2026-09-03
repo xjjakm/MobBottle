@@ -2,6 +2,7 @@ package firis.mobbottle.block.entity;
 
 
 import firis.mobbottle.MobBottle;
+import firis.mobbottle.component.MobBottleMobData;
 import firis.mobbottle.util.FirisEntityHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
@@ -100,26 +101,43 @@ public class MobBottleBlockEntityClient {
     private Map<CompoundTag, Entity> renderEntityCacheMap;
 
     /**
+     * アイテム描画用に最後に取得したクライアントワールド
+     * (ディメンション遷移中などMinecraft.getInstance().levelがnullになる瞬間でも
+     * hasLevel()がfalseにならないように保持する)
+     */
+    protected net.minecraft.world.level.Level lastClientLevel;
+
+    /**
      * アイテム描画に必要な情報を設定する
      *
      * @param stack
      */
     public void setMobBottleDataFromBEWLR(ItemStack stack) {
 
-        this.blockEntity.setLevel(Minecraft.getInstance().level);
+        net.minecraft.world.level.Level level = Minecraft.getInstance().level;
+        if (level != null) {
+            this.lastClientLevel = level;
+        }
+        if (this.lastClientLevel != null) {
+            this.blockEntity.setLevel(this.lastClientLevel);
+        }
 
-        this.blockEntity.mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
+        //コンポーネントが無い場合は空瓶として扱う
+        MobBottleMobData mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
+        this.blockEntity.mobData = mobData != null ? mobData : MobBottleMobData.Empty();
         this.blockEntity.dataDirection = Direction.EAST;
 
+        CompoundTag tag = this.blockEntity.mobData.tag();
+
         //キャッシュに存在しない場合はgetRenderEntityでEntityを生成する
-        if (!this.renderEntityCacheMap.containsKey(this.blockEntity.mobData.tag())) {
+        if (!this.renderEntityCacheMap.containsKey(tag)) {
             this.renderEntityCache = null;
             this.isRenderEntityCache = false;
-            this.renderEntityCacheMap.put(this.blockEntity.mobData.tag(), this.getRenderEntity());
+            this.renderEntityCacheMap.put(tag, this.getRenderEntity());
         }
 
         //キャッシュからEntityを反映
-        this.renderEntityCache = this.renderEntityCacheMap.get(this.blockEntity.mobData.tag());
+        this.renderEntityCache = this.renderEntityCacheMap.get(tag);
         this.isRenderEntityCache = true;
     }
 

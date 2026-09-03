@@ -34,7 +34,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +95,7 @@ public class MobBottleBlock extends BaseEntityBlock {
      */
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        Optional<MobBottleBlockEntity> optBlockEntity = level.getBlockEntity(pos, FirisBlockEntityType.BLOCK_ENTITY_TYPE.get());
+        Optional<MobBottleBlockEntity> optBlockEntity = level.getBlockEntity(pos, FirisBlockEntityType.BLOCK_ENTITY_TYPE);
         if (!optBlockEntity.isEmpty()) {
             //ブロック描画情報を設定
             optBlockEntity.get().setMobBottleData(stack, getHorizontalDirection(entity));
@@ -109,8 +109,8 @@ public class MobBottleBlock extends BaseEntityBlock {
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity instanceof MobBottleBlockEntity mobBottleBlockEntity) {
-            if (!level.isClientSide) {
-                ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE.get());
+            if (!level.isClientSide()) {
+                ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE);
                 mobBottleBlockEntity.saveToItem(itemstack);
 
                 ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, itemstack);
@@ -141,8 +141,8 @@ public class MobBottleBlock extends BaseEntityBlock {
             String itemId = FirisUtil.getIdFromItem(stack.getItem(), "");
 
             //モブボトルの場合
-            if (block.equals(FirisBlocks.MOB_BOTTLE.get())) {
-                mbBlockEntity.setMobBottleBlock(FirisBlocks.MOB_BOTTLE_EMPTY.get());
+            if (block.equals(FirisBlocks.MOB_BOTTLE)) {
+                mbBlockEntity.setMobBottleBlock(FirisBlocks.MOB_BOTTLE_EMPTY);
             } else if (itemId.endsWith("_sword")) {
                 //外装ケースを消す
                 mbBlockEntity.setMobBottleBlock(Blocks.AIR);

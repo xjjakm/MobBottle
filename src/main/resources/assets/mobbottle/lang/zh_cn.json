@@ -1,0 +1,6 @@
+{
+    "block.mobbottle.mob_bottle": "生物展示瓶",
+    "block.mobbottle.mob_bottle_empty": "空生物展示瓶",
+    "info.mobbottle.mob_bottle": "展示封印生物的瓶子",
+    "info.mobbottle.mob_bottle_in": "展示被封印的%s的瓶子"
+}

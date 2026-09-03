@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "www",
+    "gdg",
+    "ggg"
+  ],
+  "key": {
+    "g": "#c:glass_blocks/cheap",
+    "w": "#minecraft:wooden_slabs",
+    "d": "#c:gems"
+  },
+  "result": {
+    "id": "mobbottle:mob_bottle",
+    "count": 1
+  }
+}

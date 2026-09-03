@@ -4,157 +4,113 @@ import com.mojang.logging.LogUtils;
 import firis.mobbottle.block.MobBottleBlock;
 import firis.mobbottle.block.MobBottleEmptyBlock;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
-import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
-import firis.mobbottle.client.renderer.MobBottleBlockEntitySpecialModelRenderer;
 import firis.mobbottle.component.MobBottleMobData;
 import firis.mobbottle.item.MobBottleBlockItem;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
-import java.util.function.Supplier;
+import java.util.Set;
 
+public class MobBottle implements ModInitializer {
 
-// The value here should match an entry in the META-INF/mods.toml file
-@Mod(MobBottle.MODID)
-public class MobBottle {
     public static final String MODID = "mobbottle";
 
-    // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
     /**
      * ブロック参照用定義
      */
     public static class FirisBlocks {
-        public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
-
-        public static final DeferredBlock<Block> MOB_BOTTLE = BLOCKS.register("mob_bottle", () ->
-                new MobBottleBlock(
-                        MobBottleBlock.PROPERTIES.setId(
-                                ResourceKey.create(Registries.BLOCK,
-                                        ResourceLocation.fromNamespaceAndPath(MODID, "mob_bottle")))));
-        public static final DeferredBlock<Block> MOB_BOTTLE_EMPTY = BLOCKS.register("mob_bottle_empty", () ->
-                new MobBottleEmptyBlock(
-                        MobBottleBlock.PROPERTIES.setId(
-                                ResourceKey.create(Registries.BLOCK,
-                                        ResourceLocation.fromNamespaceAndPath(MODID, "mob_bottle_empty")))));
+        public static final Block MOB_BOTTLE = Registry.register(
+                BuiltInRegistries.BLOCK,
+                Identifier.fromNamespaceAndPath(MODID, "mob_bottle"),
+                new MobBottleBlock(MobBottleBlock.PROPERTIES.setId(
+                        ResourceKey.create(Registries.BLOCK,
+                                Identifier.fromNamespaceAndPath(MODID, "mob_bottle")))));
+        public static final Block MOB_BOTTLE_EMPTY = Registry.register(
+                BuiltInRegistries.BLOCK,
+                Identifier.fromNamespaceAndPath(MODID, "mob_bottle_empty"),
+                new MobBottleEmptyBlock(MobBottleBlock.PROPERTIES.setId(
+                        ResourceKey.create(Registries.BLOCK,
+                                Identifier.fromNamespaceAndPath(MODID, "mob_bottle_empty")))));
     }
 
     /**
      * アイテム参照用定義
      */
     public static class FirisItems {
-        public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
-
-        public static final DeferredItem<BlockItem> MOB_BOTTLE = ITEMS.register("mob_bottle", () -> new MobBottleBlockItem(FirisBlocks.MOB_BOTTLE.get()));
-        public static final DeferredItem<BlockItem> MOB_BOTTLE_EMPTY = ITEMS.registerSimpleBlockItem("mob_bottle_empty", FirisBlocks.MOB_BOTTLE_EMPTY);
+        public static final BlockItem MOB_BOTTLE = Registry.register(
+                BuiltInRegistries.ITEM,
+                Identifier.fromNamespaceAndPath(MODID, "mob_bottle"),
+                new MobBottleBlockItem(FirisBlocks.MOB_BOTTLE));
+        public static final BlockItem MOB_BOTTLE_EMPTY =
+                Registry.register(BuiltInRegistries.ITEM,
+                        Identifier.fromNamespaceAndPath(MODID, "mob_bottle_empty"),
+                        new BlockItem(FirisBlocks.MOB_BOTTLE_EMPTY, new net.minecraft.world.item.Item.Properties()
+                                .setId(ResourceKey.create(Registries.ITEM,
+                                        Identifier.fromNamespaceAndPath(MODID, "mob_bottle_empty")))
+                                .useBlockDescriptionPrefix()));
     }
 
     /**
      * BlockEntityType参照用定義
      */
     public static class FirisBlockEntityType {
-        public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
-
-        public static final Supplier<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = REGISTER.register("mob_bottle_be",
-                () -> new BlockEntityType<>(MobBottleBlockEntity::new, FirisBlocks.MOB_BOTTLE.get()));
+        public static final BlockEntityType<MobBottleBlockEntity> BLOCK_ENTITY_TYPE = Registry.register(
+                BuiltInRegistries.BLOCK_ENTITY_TYPE,
+                Identifier.fromNamespaceAndPath(MODID, "mob_bottle_be"),
+                new BlockEntityType<>(MobBottleBlockEntity::new, Set.of(FirisBlocks.MOB_BOTTLE)));
     }
 
     /**
      * DataComponentType参照用定義
      */
     public static class FirisDataComponentType {
-        public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
-
-        public static final Supplier<DataComponentType<MobBottleMobData>> MOBBOTTLE_TYPE = REGISTRAR.registerComponentType(
-                "mob_data_type",
-                builder -> builder
+        public static final DataComponentType<MobBottleMobData> MOBBOTTLE_TYPE = Registry.register(
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                Identifier.fromNamespaceAndPath(MODID, "mob_data_type"),
+                DataComponentType.<MobBottleMobData>builder()
                         .persistent(MobBottleMobData.CODEC)
                         .networkSynchronized(MobBottleMobData.STREAM_CODEC)
-        );
+                        .build());
     }
 
-    /**
-     * 各種イベント登録
-     */
-    public MobBottle(IEventBus modEventBus) {
+    @Override
+    public void onInitialize() {
+        //Fabricではブロック・アイテム・BlockEntityType・DataComponentTypeはstatic初期化で登録する
+        //ここでは関連オブジェクトの参照を確定させつつクリエイティブタブへ登録する
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(output -> {
+            output.accept(FirisItems.MOB_BOTTLE_EMPTY);
+            output.accept(FirisItems.MOB_BOTTLE);
+        });
 
-        //共通処理
-        modEventBus.addListener(this::commonSetup);
-        //クリエイティブタブ登録
-        modEventBus.addListener(this::CreativeModeTabEventBuildContents);
+        //26.2ではEntityのinteract処理からItem#interactLivingEntityが呼ばれなくなったため
+        //FabricのUseEntityCallbackで「生物を右クリックして捕獲」の処理を復元する
+        UseEntityCallback.EVENT.register((player, level, hand, entity, hitResult) -> {
+            ItemStack handStack = player.getItemInHand(hand);
+            if (handStack.getItem() instanceof MobBottleBlockItem mobBottleItem
+                    && entity instanceof LivingEntity livingEntity) {
+                return mobBottleItem.interactLivingEntity(handStack, player, livingEntity, hand);
+            }
+            return InteractionResult.PASS;
+        });
 
-        //関連オブジェクト登録
-        FirisBlocks.BLOCKS.register(modEventBus);
-        FirisItems.ITEMS.register(modEventBus);
-        FirisBlockEntityType.REGISTER.register(modEventBus);
-        FirisDataComponentType.REGISTRAR.register(modEventBus);
-
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-    }
-
-    /**
-     * クリエイティブタブ登録イベント
-     */
-    private void CreativeModeTabEventBuildContents(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(FirisBlocks.MOB_BOTTLE_EMPTY.get());
-            event.accept(FirisBlocks.MOB_BOTTLE.get());
-        }
-    }
-
-    @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-        }
-
-        /**
-         * ブロック描画系登録イベント
-         */
-        @SubscribeEvent
-        public static void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-            //BER登録
-            event.registerBlockEntityRenderer(
-                    FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),
-                    MobBottleBlockEntityRenderer::new
-            );
-        }
-
-        /**
-         * アイテム描画イベント登録
-         *
-         * @param event
-         */
-        @SubscribeEvent
-        public static void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
-            event.register(
-                    ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mobbottle_special"),
-                    MobBottleBlockEntitySpecialModelRenderer.Unbaked.MAP_CODEC
-            );
-        }
+        //static初期化を確実に実施する
+        LOGGER.info("MobBottle registered: {} / {}", FirisItems.MOB_BOTTLE_EMPTY, FirisItems.MOB_BOTTLE);
     }
 }

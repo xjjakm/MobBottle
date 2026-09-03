@@ -8,7 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -34,9 +34,9 @@ public class MobBottleBlockItem extends BlockItem {
         super(block,
                 (new Item.Properties())
                         .stacksTo(1)
-                        .component(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE.get(), MobBottleMobData.Empty())
+                        .component(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE, MobBottleMobData.Empty())
                         .setId(ResourceKey.create(Registries.ITEM,
-                                ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mob_bottle")))
+                                Identifier.fromNamespaceAndPath(MobBottle.MODID, "mob_bottle")))
                         .useBlockDescriptionPrefix()
         );
     }
@@ -78,13 +78,6 @@ public class MobBottleBlockItem extends BlockItem {
         //モブ情報取得
         catchMobBottle(player, livingEntity, hand);
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        //モブ情報取得
-        catchMobBottle(player, entity, InteractionHand.MAIN_HAND);
-        return true;
     }
 
     /**

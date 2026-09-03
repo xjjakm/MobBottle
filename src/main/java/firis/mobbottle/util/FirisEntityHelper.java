@@ -11,8 +11,15 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class FirisEntityHelper {
+
+    /**
+     * 描画専用Entityに仮のIDを割り当てるための共通カウンタ
+     * (実EntityのIDと衝突しないよう負の値を使用)
+     */
+    private static final AtomicInteger RENDER_ENTITY_ID = new AtomicInteger();
 
     /**
      * EntityのCompoundTagからEntityを生成する
@@ -42,12 +49,28 @@ public class FirisEntityHelper {
             if (entity != null) {
                 //情報の上書き
                 entity.load(input);
+                //クライアント側でEntity#createした場合、Level#getNextEntityIdが0を返すためIDが割り当てられない
+                //(実EntityはスパウンパケットでIDが設定されるが、描画専用Entityでは設定されない)
+                //描画時にEntity#getIdを呼ぶとIllegalStateExceptionになるため、一意な仮IDを割り当てる
+                assignRenderEntityId(entity);
             }
 
         } catch (Exception e) {
             entity = null;
         }
         return entity;
+    }
+
+    /**
+     * 描画専用EntityにID未割り当て(0)の場合のみ仮IDを割り当てる
+     */
+    private static void assignRenderEntityId(Entity entity) {
+        try {
+            //既にIDが割り当てられている場合は何もしない
+            entity.getId();
+        } catch (IllegalStateException e) {
+            entity.setId(-RENDER_ENTITY_ID.incrementAndGet());
+        }
     }
 
     /**

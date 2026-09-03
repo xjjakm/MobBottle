@@ -4,11 +4,12 @@ import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.component.MobBottleMobData;
 import firis.mobbottle.util.FirisUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -21,8 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 public class MobBottleBlockEntity extends BlockEntity {
 
@@ -54,10 +53,10 @@ public class MobBottleBlockEntity extends BlockEntity {
     protected final MobBottleBlockEntityClient client;
 
     public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
+        super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE, p_155229_, p_155230_);
 
         //Client処理の初期化
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             this.client = new MobBottleBlockEntityClient(this);
         } else {
             this.client = null;
@@ -73,6 +72,8 @@ public class MobBottleBlockEntity extends BlockEntity {
     public void setMobBottleData(ItemStack stack, Direction direction) {
         this.mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
         this.dataDirection = direction;
+        //サーバー側からクライアントへ同期するためにdirty化する
+        this.setChanged();
     }
 
     /**
@@ -159,27 +160,11 @@ public class MobBottleBlockEntity extends BlockEntity {
     }
 
     /***
-     * チャンクロード時のTagロード
-     */
-    @Override
-    public void handleUpdateTag(ValueInput input) {
-        super.handleUpdateTag(input);
-    }
-
-    /***
      * 手動同期時のTag設定
      */
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    /***
-     * 手動同期時のTagロード
-     */
-    @Override
-    public void onDataPacket(Connection net, ValueInput valueInput) {
-        super.onDataPacket(net, valueInput);
     }
 
     @Override
@@ -208,7 +193,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 
     protected Block getDataBlock() {
         if (this.dataBlock == null) {
-            this.dataBlock = FirisBlocks.MOB_BOTTLE_EMPTY.get();
+            this.dataBlock = FirisBlocks.MOB_BOTTLE_EMPTY;
         }
         return this.dataBlock;
     }

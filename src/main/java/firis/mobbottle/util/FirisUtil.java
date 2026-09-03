@@ -2,7 +2,7 @@ package firis.mobbottle.util;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -22,7 +22,7 @@ public class FirisUtil {
      */
     public static Block getBlockFromId(String blockId, Block defBlock) {
         //IDからBlockを取得
-        Optional<Holder.Reference<Block>> blockData = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+        Optional<Holder.Reference<Block>> blockData = BuiltInRegistries.BLOCK.get(Identifier.parse(blockId));
         if (blockData.isEmpty()) {
             if (defBlock == null) {
                 return Blocks.AIR;
@@ -43,9 +43,9 @@ public class FirisUtil {
         //返却用ID
         String blockId = EMPTY_BLOCK_ID;
         //ブロックチェック
-        if (BuiltInRegistries.BLOCK.containsValue(block)) {
+        if (BuiltInRegistries.BLOCK.getResourceKey(block).isPresent()) {
             //ブロックが存在する場合
-            ResourceLocation rlBlockId = BuiltInRegistries.BLOCK.getKey(block);
+            Identifier rlBlockId = BuiltInRegistries.BLOCK.getKey(block);
             if (rlBlockId != null) {
                 blockId = rlBlockId.toString();
             }
@@ -66,9 +66,9 @@ public class FirisUtil {
         //返却用ID
         String itemId = EMPTY_ITEM_ID;
         //アイテムチェック
-        if (BuiltInRegistries.ITEM.containsValue(item)) {
+        if (BuiltInRegistries.ITEM.getResourceKey(item).isPresent()) {
             //アイテムが存在する場合
-            ResourceLocation rlItemId = BuiltInRegistries.ITEM.getKey(item);
+            Identifier rlItemId = BuiltInRegistries.ITEM.getKey(item);
             if (rlItemId != null) {
                 itemId = rlItemId.toString();
             }
