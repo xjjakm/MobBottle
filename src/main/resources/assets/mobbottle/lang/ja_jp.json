@@ -1,6 +1,10 @@
 {
+    "itemGroup.mobbottle": "生物展示瓶",
     "block.mobbottle.mob_bottle": "モブボトル",
     "block.mobbottle.mob_bottle_empty": "空のモブボトル",
     "info.mobbottle.mob_bottle": "生物を封印する小瓶",
-    "info.mobbottle.mob_bottle_in": "%sを封印した小瓶"
+    "info.mobbottle.mob_bottle_in": "%sを封印した小瓶",
+    "info.mobbottle.mob_bottle_empty": "ただの飾りです。モブは入れられません",
+    "modmenu.descriptionTranslation.mobbottle": "モブを捕獲して小瓶(展示ボトル)に封印し、飾り付けを楽しめるMODです。設置後はサイズ・高さ・向きを調整して、封印したモブを鑑賞できます。",
+    "modmenu.summaryTranslation.mobbottle": "モブを捕獲して小瓶に封印し飾り付けできるMOD"
 }

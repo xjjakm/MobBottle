@@ -8,6 +8,18 @@
         "top": "mobbottle:block/mob_bottle_top",
         "particle": "mobbottle:block/mob_bottle_side"
     },
+    "display": {
+        "firstperson_righthand": {
+            "rotation": [0, 45, 0],
+            "translation": [0, 0, -2.0],
+            "scale": [0.3, 0.3, 0.3]
+        },
+        "firstperson_lefthand": {
+            "rotation": [0, 225, 0],
+            "translation": [0, 0, -2.0],
+            "scale": [0.3, 0.3, 0.3]
+        }
+    },
     "elements": [
         {
             "from": [2, 0, 2],

@@ -5,6 +5,7 @@
 
   "name": "MobBottle",
   "description": "MobBottle is a mod that allows you to capture mobs and decorate mobs.",
+  "icon": "assets/mobbottle/icon.png",
   "authors": [
     "firis-games",
     "chxjj"

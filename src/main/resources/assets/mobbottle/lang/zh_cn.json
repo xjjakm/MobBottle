@@ -1,6 +1,10 @@
 {
+    "itemGroup.mobbottle": "生物展示瓶",
     "block.mobbottle.mob_bottle": "生物展示瓶",
     "block.mobbottle.mob_bottle_empty": "空生物展示瓶",
     "info.mobbottle.mob_bottle": "展示封印生物的瓶子",
-    "info.mobbottle.mob_bottle_in": "展示被封印的%s的瓶子"
+    "info.mobbottle.mob_bottle_in": "展示被封印的%s的瓶子",
+    "info.mobbottle.mob_bottle_empty": "只是个装饰物而已，不能装生物",
+    "modmenu.descriptionTranslation.mobbottle": "生物展示瓶 Mod：捕获生物并将其封印在展示瓶中用于装饰。放置后可调整大小、高度与朝向，观赏被封印的生物。",
+    "modmenu.summaryTranslation.mobbottle": "捕获生物并封印在展示瓶中作为装饰的模组"
 }

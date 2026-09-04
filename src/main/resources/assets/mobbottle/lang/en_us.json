@@ -1,6 +1,10 @@
 {
+    "itemGroup.mobbottle": "Mob Bottle",
     "block.mobbottle.mob_bottle": "Mob Bottle",
     "block.mobbottle.mob_bottle_empty": "Empty Mob Bottle",
     "info.mobbottle.mob_bottle": "Bottle that seals creatures",
-    "info.mobbottle.mob_bottle_in": "Bottle that seals %s"
+    "info.mobbottle.mob_bottle_in": "Bottle that seals %s",
+    "info.mobbottle.mob_bottle_empty": "It is just a decoration. It cannot hold mobs.",
+    "modmenu.descriptionTranslation.mobbottle": "MobBottle is a mod that allows you to capture mobs and seal them in a display bottle for decoration. After placing, you can adjust the size, height and direction to admire the sealed mob.",
+    "modmenu.summaryTranslation.mobbottle": "A mod that captures mobs and seals them in bottle displays"
 }
