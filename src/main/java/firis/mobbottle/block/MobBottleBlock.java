@@ -1,6 +1,5 @@
 package firis.mobbottle.block;
 
-import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
@@ -46,11 +45,8 @@ public class MobBottleBlock extends BaseEntityBlock {
             .strength(1.5F)
             .isRedstoneConductor((BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) -> false)
             .isSuffocating((BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) -> false)
-            .pushReaction(PushReaction.BLOCK)
+            .pushReaction(PushReaction.IMMOVEABLE)
             .sound(SoundType.GLASS);
-
-    //MobBottle Codec
-    public static final MapCodec<MobBottleBlock> CODEC = simpleCodec(MobBottleBlock::new);
 
     //モブボトル当たり判定
     protected static final VoxelShape VS_MOB_BOTTLE_BLOCK = Shapes.create(
@@ -203,11 +199,6 @@ public class MobBottleBlock extends BaseEntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
-    }
-
-    @Override
-    protected MapCodec<MobBottleBlock> codec() {
-        return CODEC;
     }
 
     @Override

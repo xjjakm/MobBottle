@@ -1,6 +1,7 @@
 package firis.mobbottle.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Transformation;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
 import firis.mobbottle.block.entity.MobBottleBlockEntityClient;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -18,6 +19,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.jspecify.annotations.Nullable;
 
@@ -150,7 +152,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
             Quaternionf quaternion = state.direction.getRotation();
             quaternion.mul(new Quaternionf().fromAxisAngleDeg(1, 0, 0, -90f));
             quaternion.mul(new Quaternionf().fromAxisAngleDeg(0, 1, 0, 180f));
-            poseStack.mulPose(quaternion);
+            poseStack.mulPose(new Transformation(new Matrix4f().rotation(quaternion)));
 
             entityRenderer.submit(state.displayEntity, camera, 0.0d, 0.0d, 0.0d, poseStack, submitNodeCollector);
 
