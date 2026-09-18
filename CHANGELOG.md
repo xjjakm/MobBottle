@@ -1,6 +1,12 @@
-# Changelog
+# 更新日志
 
-All notable changes to the MobBottle mod are documented in this file.
+所有对 MobBottle 模组的重要更改都记录在这个文件里。
+
+## [26.3-1] - 2026-09-17
+### 移植
+
+- 从 26.2 移植至 Minecraft 26.3 + Fabric API 0.160.6
+没有其他的了
 
 ## [26.2-2] - 2026-09-04
 
